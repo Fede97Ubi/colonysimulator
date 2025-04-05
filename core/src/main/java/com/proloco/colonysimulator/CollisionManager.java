@@ -1,59 +1,59 @@
-package com.proloco.colonysimulator;
+// package com.proloco.colonysimulator;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.math.MathUtils;
+// import com.badlogic.gdx.math.Vector2;
+// import com.badlogic.gdx.utils.Array;
+// import com.badlogic.gdx.math.MathUtils;
 
-public class CollisionManager {
-    public void handleCollisions(Array<Ant> ants, Array<SceneObject> objects) {
-        for (Ant ant : ants) {
-            ant.setColliding(false); // Resetta lo stato di collisione per questa formica
+// public class CollisionManager {
+//     public void handleCollisions(Array<Ant> ants, Array<SceneObject> objects) {
+//         for (Ant ant : ants) {
+//             ant.setColliding(false); // Resetta lo stato di collisione per questa formica
 
-            for (SceneObject object : objects) {
-                if (object instanceof Block && ant.bounds.overlaps(object.getBounds())) {
-                    ant.setColliding(true); // La formica è in collisione
+//             for (SceneObject object : objects) {
+//                 if (object instanceof Block && ant.bounds.overlaps(object.getBounds())) {
+//                     ant.setColliding(true); // La formica è in collisione
 
-                    if (!ant.isOnCollision()) {
-                        // La formica entra in collisione per la prima volta
-                        ant.setOnCollision(true);
+//                     if (!ant.isOnCollision()) {
+//                         // La formica entra in collisione per la prima volta
+//                         ant.setOnCollision(true);
 
-                        // Calcola il centro della formica
-                        Vector2 antCenter = new Vector2(ant.bounds.x + ant.bounds.width / 2, ant.bounds.y + ant.bounds.height / 2);
+//                         // Calcola il centro della formica
+//                         Vector2 antCenter = new Vector2(ant.bounds.x + ant.bounds.width / 2, ant.bounds.y + ant.bounds.height / 2);
 
-                        // Calcola il punto più vicino sul bordo del Block
-                        Vector2 blockBounds = new Vector2(object.getBounds().x, object.getBounds().y);
-                        float blockWidth = object.getBounds().width;
-                        float blockHeight = object.getBounds().height;
+//                         // Calcola il punto più vicino sul bordo del Block
+//                         Vector2 blockBounds = new Vector2(object.getBounds().x, object.getBounds().y);
+//                         float blockWidth = object.getBounds().width;
+//                         float blockHeight = object.getBounds().height;
 
-                        float closestX = MathUtils.clamp(antCenter.x, blockBounds.x, blockBounds.x + blockWidth);
-                        float closestY = MathUtils.clamp(antCenter.y, blockBounds.y, blockBounds.y + blockHeight);
-                        Vector2 closestPoint = new Vector2(closestX, closestY);
+//                         float closestX = MathUtils.clamp(antCenter.x, blockBounds.x, blockBounds.x + blockWidth);
+//                         float closestY = MathUtils.clamp(antCenter.y, blockBounds.y, blockBounds.y + blockHeight);
+//                         Vector2 closestPoint = new Vector2(closestX, closestY);
 
-                        // Calcola la normale basandosi sul punto più vicino
-                        Vector2 normal = antCenter.sub(closestPoint).nor();
+//                         // Calcola la normale basandosi sul punto più vicino
+//                         Vector2 normal = antCenter.sub(closestPoint).nor();
 
-                        // Calcola la velocità come vettore
-                        Vector2 velocity = new Vector2(ant.getVx(), ant.getVy());
+//                         // Calcola la velocità come vettore
+//                         Vector2 velocity = new Vector2(ant.getVx(), ant.getVy());
 
-                        // Riflette la velocità rispetto alla normale
-                        Vector2 reflectedVelocity = velocity.sub(normal.scl(2 * velocity.dot(normal)));
+//                         // Riflette la velocità rispetto alla normale
+//                         Vector2 reflectedVelocity = velocity.sub(normal.scl(2 * velocity.dot(normal)));
 
-                        // Imposta la nuova velocità
-                        ant.setVx(reflectedVelocity.x);
-                        ant.setVy(reflectedVelocity.y);
+//                         // Imposta la nuova velocità
+//                         ant.setVx(reflectedVelocity.x);
+//                         ant.setVy(reflectedVelocity.y);
 
-                        // Aggiorna l'orientamento dell'immagine in base alla nuova direzione
-                        ant.setRotation(reflectedVelocity.angleDeg());
-                    }
+//                         // Aggiorna l'orientamento dell'immagine in base alla nuova direzione
+//                         ant.setRotation(reflectedVelocity.angleDeg());
+//                     }
 
-                    break;
-                }
-            }
+//                     break;
+//                 }
+//             }
 
-            // Se la formica è in stato di collisione, verifica se è uscita dal blocco
-            if (ant.isOnCollision() && !ant.isColliding()) {
-                ant.setOnCollision(false); // Esce dallo stato di collisione
-            }
-        }
-    }
-}
+//             // Se la formica è in stato di collisione, verifica se è uscita dal blocco
+//             if (ant.isOnCollision() && !ant.isColliding()) {
+//                 ant.setOnCollision(false); // Esce dallo stato di collisione
+//             }
+//         }
+//     }
+// }

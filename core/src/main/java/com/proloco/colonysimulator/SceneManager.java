@@ -13,8 +13,10 @@ public class SceneManager {
     private Background background;
     private Zone baseZone;
     private Zone foodZone;
+    private MarkerGrid markerGrid;
 
-    public SceneManager() {
+    public SceneManager(MarkerGrid markerGrid) {
+        this.markerGrid = markerGrid;
         objects = new Array<>();
     }
 
@@ -56,6 +58,11 @@ public class SceneManager {
         // Puoi aggiungere altre scene qui
     }
 
+    public void update(float delta) {
+        // Aggiorna le matrici
+        markerGrid.updateMatrices();
+    }
+
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         // Rendering con SpriteBatch (ad esempio per lo sfondo)
         batch.begin();
@@ -68,16 +75,18 @@ public class SceneManager {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     
-        // Rendering con ShapeRenderer
+        // Rendering della griglia
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        if (baseZone != null) baseZone.render(shapeRenderer);
-        if (foodZone != null) foodZone.render(shapeRenderer);
-    
-        for (SceneObject object : objects) {
-            object.render(shapeRenderer);
+        if (markerGrid != null) {
+            markerGrid.renderActiveMatrix(shapeRenderer); // Renderizza la matrice attiva
         }
+        shapeRenderer.end();
     
-        MarkerGrid.renderGrid(shapeRenderer); // Renderizza la griglia
+        // Rendering dei blocchi sopra la griglia
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (SceneObject object : objects) {
+            object.render(shapeRenderer); // Renderizza i blocchi
+        }
         shapeRenderer.end();
     
         // (Opzionale) Disabilita blending se non necessario per altri disegni

@@ -19,15 +19,20 @@ public class Main extends ApplicationAdapter {
     private SceneManager sceneManager;
     private boolean simulationRunning = false;
     private static final float MAX_DELTA = 1 / 60f; // Limita il delta massimo a 1/30 di secondo (30 FPS)
+    private MarkerGrid markerGrid;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
-        // Inizializza SceneManager per gestire gli oggetti statici
-        sceneManager = new SceneManager();
-        sceneManager.initializeScene("world_01"); // Configura la scena in base alla stringa
+        // Inizializza MarkerGrid
+        markerGrid = new MarkerGrid();
+
+        // Inizializza SceneManager
+        sceneManager = new SceneManager(markerGrid); // Passa MarkerGrid a SceneManager
+        sceneManager.initializeScene("world_01");
+
         simulationRunning = true; // Prepara la simulazione
     }
 
@@ -38,17 +43,11 @@ public class Main extends ApplicationAdapter {
 
         if (simulationRunning) {
             float delta = Gdx.graphics.getDeltaTime();
-            updateDynamicElements(delta); // Aggiorna gli elementi dinamici
+            sceneManager.update(delta); // Aggiorna la scena e le matrici
         }
 
         // Delego il rendering al SceneManager
         sceneManager.render(batch, shapeRenderer);
-    }
-
-    private void updateDynamicElements(float delta) {
-                // Esegui l'aggiornamento degli elementi dinamici
-        // Nota: Qui puoi aggiungere la logica per gestire più thread in futuro
-        // ...future dynamic update logic...
     }
 
     @Override
