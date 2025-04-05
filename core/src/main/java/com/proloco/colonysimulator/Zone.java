@@ -3,6 +3,7 @@ package com.proloco.colonysimulator;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Zone {
     private Circle bounds;
@@ -42,5 +43,10 @@ public class Zone {
 
     public String getType() {
         return type;
+    }
+
+    public void render(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(color);
+        shapeRenderer.circle(bounds.x, bounds.y, bounds.radius);
     }
 }

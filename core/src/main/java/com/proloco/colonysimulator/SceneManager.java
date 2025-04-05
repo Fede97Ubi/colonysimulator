@@ -4,10 +4,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch; // Import aggiunto per SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+
 
 public class SceneManager {
     private Array<SceneObject> objects;
     private Background background;
+    private Zone baseZone;
+    private Zone foodZone;
 
     public SceneManager() {
         objects = new Array<>();
@@ -21,18 +26,18 @@ public class SceneManager {
         return objects;
     }
 
-    public void render(ShapeRenderer shapeRenderer) {
-        for (SceneObject object : objects) {
-            object.render(shapeRenderer);
-        }
-    }
-
     public void initializeScene(String sceneName) {
         objects.clear(); // Pulisce gli oggetti esistenti
 
         if ("world_01".equals(sceneName)) {
             background = new Background(false); // Usa il pattern
-            // Configura gli oggetti per la scena "world_01"
+
+            // Posizione e dimensioni della zona base
+            baseZone = new Zone(150, 650, 80, new Color(0.5f, 0.5f, 0.5f, 0.5f), "base");
+
+            // Posizione e dimensioni della zona cibo
+            foodZone = new Zone(1650, 150, 70, new Color(1f, 1f, 0f, 0.5f), "food");
+
             float blockWidth1 = 100;
             float blockHeight1 = 200;
             float centerX1 = (com.badlogic.gdx.Gdx.graphics.getWidth() - blockWidth1) / 2;
@@ -51,11 +56,34 @@ public class SceneManager {
         // Puoi aggiungere altre scene qui
     }
 
-    public void renderBackground(SpriteBatch batch) {
+    public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
+        // Rendering con SpriteBatch (ad esempio per lo sfondo)
+        batch.begin();
         if (background != null) {
             background.render(batch);
         }
+        batch.end();
+    
+        // Abilita blending per ShapeRenderer
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    
+        // Rendering con ShapeRenderer
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        if (baseZone != null) baseZone.render(shapeRenderer);
+        if (foodZone != null) foodZone.render(shapeRenderer);
+    
+        for (SceneObject object : objects) {
+            object.render(shapeRenderer);
+        }
+    
+        MarkerGrid.renderGrid(shapeRenderer); // Renderizza la griglia
+        shapeRenderer.end();
+    
+        // (Opzionale) Disabilita blending se non necessario per altri disegni
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
+    
 
     public void dispose() {
         if (background != null) {

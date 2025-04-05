@@ -2,7 +2,6 @@ package com.proloco.colonysimulator.desktop;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-
 import com.proloco.colonysimulator.Main;
 
 public class DesktopLauncher {
