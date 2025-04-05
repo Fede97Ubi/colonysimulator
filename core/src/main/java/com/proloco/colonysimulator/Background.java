@@ -41,22 +41,22 @@ public class Background {
         pixmap.setColor(gradientColor);
         for (int y = radius; y < height; y += spacing) {
             for (int x = 0; x < width; x++) {
-                pixmap.drawPixel(x, y);
+                pixmap.drawPixel(x - radius-1, y - radius-1); // Sposta verso l'alto e sinistra
             }
         }
         for (int x = radius; x < width; x += spacing) {
             for (int y = 0; y < height; y++) {
-                pixmap.drawPixel(x, y);
+                pixmap.drawPixel(x - radius-1, y - radius-1); // Sposta verso l'alto e sinistra
             }
         }
         for (int x = radius; x < width; x += spacing) {
             for (int y = radius; y < height; y += spacing) {
                 pixmap.setColor(backgroundColor);
-                pixmap.fillCircle(x, y, radius);
+                pixmap.fillCircle(x - radius-1, y - radius-1, radius); // Sposta verso l'alto e sinistra
                 pixmap.setColor(backgroundColor);
-                pixmap.drawCircle(x, y, radius + 1);
+                pixmap.drawCircle(x - radius-1, y - radius-1, radius + 1); // Sposta verso l'alto e sinistra
                 pixmap.setColor(lineColor);
-                pixmap.drawCircle(x, y, radius);
+                pixmap.drawCircle(x - radius-1, y - radius-1, radius); // Sposta verso l'alto e sinistra
             }
         }
 

@@ -7,39 +7,52 @@ import com.badlogic.gdx.math.MathUtils;
 public class CollisionManager {
     public void handleCollisions(Array<Ant> ants, Array<SceneObject> objects) {
         for (Ant ant : ants) {
+            ant.setColliding(false); // Resetta lo stato di collisione per questa formica
+
             for (SceneObject object : objects) {
                 if (object instanceof Block && ant.bounds.overlaps(object.getBounds())) {
-                    // Calcola il centro della formica
-                    Vector2 antCenter = new Vector2(ant.bounds.x + ant.bounds.width / 2, ant.bounds.y + ant.bounds.height / 2);
+                    ant.setColliding(true); // La formica è in collisione
 
-                    // Calcola il punto più vicino sul bordo del Block
-                    Vector2 blockBounds = new Vector2(object.getBounds().x, object.getBounds().y);
-                    float blockWidth = object.getBounds().width;
-                    float blockHeight = object.getBounds().height;
+                    if (!ant.isOnCollision()) {
+                        // La formica entra in collisione per la prima volta
+                        ant.setOnCollision(true);
 
-                    // Trova il punto più vicino sul bordo del Block
-                    float closestX = MathUtils.clamp(antCenter.x, blockBounds.x, blockBounds.x + blockWidth);
-                    float closestY = MathUtils.clamp(antCenter.y, blockBounds.y, blockBounds.y + blockHeight);
-                    Vector2 closestPoint = new Vector2(closestX, closestY);
+                        // Calcola il centro della formica
+                        Vector2 antCenter = new Vector2(ant.bounds.x + ant.bounds.width / 2, ant.bounds.y + ant.bounds.height / 2);
 
-                    // Calcola la normale basandosi sul punto più vicino
-                    Vector2 normal = antCenter.sub(closestPoint).nor();
+                        // Calcola il punto più vicino sul bordo del Block
+                        Vector2 blockBounds = new Vector2(object.getBounds().x, object.getBounds().y);
+                        float blockWidth = object.getBounds().width;
+                        float blockHeight = object.getBounds().height;
 
-                    // Calcola la velocità come vettore
-                    Vector2 velocity = new Vector2(ant.getVx(), ant.getVy());
+                        float closestX = MathUtils.clamp(antCenter.x, blockBounds.x, blockBounds.x + blockWidth);
+                        float closestY = MathUtils.clamp(antCenter.y, blockBounds.y, blockBounds.y + blockHeight);
+                        Vector2 closestPoint = new Vector2(closestX, closestY);
 
-                    // Riflette la velocità rispetto alla normale
-                    Vector2 reflectedVelocity = velocity.sub(normal.scl(2 * velocity.dot(normal)));
+                        // Calcola la normale basandosi sul punto più vicino
+                        Vector2 normal = antCenter.sub(closestPoint).nor();
 
-                    // Imposta la nuova velocità
-                    ant.setVx(reflectedVelocity.x);
-                    ant.setVy(reflectedVelocity.y);
+                        // Calcola la velocità come vettore
+                        Vector2 velocity = new Vector2(ant.getVx(), ant.getVy());
 
-                    // Aggiorna l'orientamento dell'immagine in base alla nuova direzione
-                    ant.setRotation(reflectedVelocity.angleDeg());
+                        // Riflette la velocità rispetto alla normale
+                        Vector2 reflectedVelocity = velocity.sub(normal.scl(2 * velocity.dot(normal)));
+
+                        // Imposta la nuova velocità
+                        ant.setVx(reflectedVelocity.x);
+                        ant.setVy(reflectedVelocity.y);
+
+                        // Aggiorna l'orientamento dell'immagine in base alla nuova direzione
+                        ant.setRotation(reflectedVelocity.angleDeg());
+                    }
 
                     break;
                 }
+            }
+
+            // Se la formica è in stato di collisione, verifica se è uscita dal blocco
+            if (ant.isOnCollision() && !ant.isColliding()) {
+                ant.setOnCollision(false); // Esce dallo stato di collisione
             }
         }
     }

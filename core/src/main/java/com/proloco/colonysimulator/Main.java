@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.GL20;
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture antTexture;
-    private int antsCounter = 200; // Numero di formiche da creare
+    private int antsCounter = 10; // Numero di formiche da creare
     private ShapeRenderer shapeRenderer;
 
     private Zone baseZone;
@@ -25,6 +25,7 @@ public class Main extends ApplicationAdapter {
     private SceneManager sceneManager;
     private AntManager antManager;
     private CollisionManager collisionManager; // Dichiarazione di collisionManager
+    private float matrixUpdateTimer = 0; // Timer per aggiornare la matrice
 
     @Override
     public void create() {
@@ -46,11 +47,22 @@ public class Main extends ApplicationAdapter {
         sceneManager.initializeScene("world_01"); // Inizializza la scena "world_01"
 
         collisionManager = new CollisionManager(); // Inizializzazione di collisionManager
+
+        int width = com.badlogic.gdx.Gdx.graphics.getWidth();
+        int height = com.badlogic.gdx.Gdx.graphics.getHeight();
+        MarkerGrid.initializeMatrix(width, height); // Inizializza la matrice
     }
 
     @Override
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
+
+        // Aggiorna il timer e chiama updateMatrix ogni mezzo secondo
+        matrixUpdateTimer += delta;
+        if (matrixUpdateTimer >= 0.50f) {
+            MarkerGrid.updateMatrix(); // Aggiorna tutte le matrici
+            matrixUpdateTimer = 0;
+        }
 
         antManager.updateAnts(delta);
         collisionManager.handleCollisions(antManager.getAnts(), sceneManager.getObjects());
@@ -58,39 +70,50 @@ public class Main extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // 1. Background
         batch.begin();
-        sceneManager.renderBackground(batch); // Disegna il background tramite SceneManager
+        sceneManager.renderBackground(batch);
         batch.end();
 
-        // Disegna le zone con trasparenza
+        // 2. Griglia marker
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        
-        shapeRenderer.begin(ShapeType.Filled);
-        // Disegna la zona base
-        shapeRenderer.setColor(baseZone.getColor());
-        shapeRenderer.circle(baseZone.getCenterX(), baseZone.getCenterY(), baseZone.getRadius());
-        
-        // Disegna la zona cibo
-        shapeRenderer.setColor(foodZone.getColor());
-        shapeRenderer.circle(foodZone.getCenterX(), foodZone.getCenterY(), foodZone.getRadius());
-        shapeRenderer.end();
-        
+        MarkerGrid.renderGrid(shapeRenderer); // Renderizza il contenuto delle celle
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        
-        batch.begin();
-        antManager.renderAnts(batch); // Disegna tutte le formiche tramite AntManager
-        batch.end();
-        
-        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        // 3. Marker
         shapeRenderer.begin(ShapeType.Filled);
-        antManager.renderFoodIndicators(shapeRenderer); // Disegna gli indicatori di cibo tramite AntManager
+        // Rimosso: Ant.renderMarkers(shapeRenderer); // Disegna i marker sopra la griglia
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
+        // 4. Block
         shapeRenderer.begin(ShapeType.Filled);
         sceneManager.render(shapeRenderer);
         shapeRenderer.end();
+
+        // 5. Zone
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeType.Filled);
+        shapeRenderer.setColor(baseZone.getColor());
+        shapeRenderer.circle(baseZone.getCenterX(), baseZone.getCenterY(), baseZone.getRadius());
+        shapeRenderer.setColor(foodZone.getColor());
+        shapeRenderer.circle(foodZone.getCenterX(), foodZone.getCenterY(), foodZone.getRadius());
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        // 6. Formiche
+        batch.begin();
+        antManager.renderAnts(batch); // Corretto per accettare solo SpriteBatch
+        batch.end();
+
+        // 7. Indicatori di cibo
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.begin(ShapeType.Filled);
+        antManager.renderFoodIndicators(shapeRenderer);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     @Override
