@@ -14,6 +14,7 @@ public class SceneManager {
     private Zone baseZone;
     private Zone foodZone;
     private MarkerGrid markerGrid;
+    private AntManager antManager;
 
     public SceneManager(MarkerGrid markerGrid) {
         this.markerGrid = markerGrid;
@@ -51,6 +52,8 @@ public class SceneManager {
             float centerX2 = centerX1 - 20; // 20 px più a sinistra
             float centerY2 = centerY1 - 200; // 200 px più in basso
             addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
+
+            antManager = new AntManager(10); // Crea 10 formiche
         } else if ("world_02".equals(sceneName)) {
             background = new Background(true); // Usa un'immagine
         }
@@ -99,6 +102,13 @@ public class SceneManager {
         }
         shapeRenderer.end();
     
+        // Rendering delle formiche sopra tutti gli altri oggetti
+        batch.begin();
+        if (antManager != null) {
+            antManager.render(batch); // Renderizza le formiche
+        }
+        batch.end();
+    
         // (Opzionale) Disabilita blending se non necessario per altri disegni
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
@@ -107,6 +117,9 @@ public class SceneManager {
     public void dispose() {
         if (background != null) {
             background.dispose();
+        }
+        if (antManager != null) {
+            antManager.dispose();
         }
     }
 }
