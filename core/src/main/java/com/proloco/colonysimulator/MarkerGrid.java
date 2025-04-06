@@ -23,9 +23,9 @@ public class MarkerGrid {
         // Inizializza i valori delle matrici a 0
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                trampleMatrix[i][j] = i + j;
-                baseDistanceMatrix[i][j] = i + j;
-                foodDistanceMatrix[i][j] = i + j;
+                trampleMatrix[i][j] = 0;
+                baseDistanceMatrix[i][j] = 0;
+                foodDistanceMatrix[i][j] = 0;
             }
         }
     }
