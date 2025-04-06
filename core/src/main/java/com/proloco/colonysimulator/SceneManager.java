@@ -82,7 +82,17 @@ public class SceneManager {
         }
         shapeRenderer.end();
     
-        // Rendering dei blocchi sopra la griglia
+        // Rendering delle zone (base e cibo)
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        if (baseZone != null) {
+            baseZone.render(shapeRenderer);
+        }
+        if (foodZone != null) {
+            foodZone.render(shapeRenderer);
+        }
+        shapeRenderer.end();
+    
+        // Rendering dei blocchi sopra la griglia e le zone
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (SceneObject object : objects) {
             object.render(shapeRenderer); // Renderizza i blocchi
