@@ -1,6 +1,7 @@
 package com.proloco.colonysimulator;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 
 public class AntManager {
@@ -17,9 +18,9 @@ public class AntManager {
         }
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         for (Ant ant : ants) {
-            ant.render(batch);
+            ant.render(batch, shapeRenderer); // Passa entrambi i parametri
         }
     }
 

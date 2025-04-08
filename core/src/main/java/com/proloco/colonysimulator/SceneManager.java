@@ -108,9 +108,13 @@ public class SceneManager {
         // Rendering delle formiche sopra tutti gli altri oggetti
         batch.begin();
         if (antManager != null) {
-            antManager.render(batch); // Renderizza le formiche
+            batch.end(); // Chiudi il batch prima di usare ShapeRenderer
+            antManager.render(batch, shapeRenderer); // Passa entrambi i parametri
         }
-        batch.end();
+        else {
+            batch.end();
+        }
+        
     
         // (Opzionale) Disabilita blending se non necessario per altri disegni
         Gdx.gl.glDisable(GL20.GL_BLEND);
