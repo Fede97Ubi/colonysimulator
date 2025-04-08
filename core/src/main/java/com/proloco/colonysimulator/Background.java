@@ -49,8 +49,8 @@ public class Background {
                 pixmap.drawPixel(x - radius-1, y - radius-1); // Sposta verso l'alto e sinistra
             }
         }
-        for (int x = radius; x < width; x += spacing) {
-            for (int y = radius; y < height; y += spacing) {
+        for (int x = radius; x < width + spacing; x += spacing) {
+            for (int y = radius; y < height + spacing; y += spacing) {
                 pixmap.setColor(backgroundColor);
                 pixmap.fillCircle(x - radius-1, y - radius-1, radius); // Sposta verso l'alto e sinistra
                 pixmap.setColor(backgroundColor);

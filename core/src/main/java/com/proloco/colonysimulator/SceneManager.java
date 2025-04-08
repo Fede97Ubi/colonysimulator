@@ -15,6 +15,7 @@ public class SceneManager {
     private Zone foodZone;
     private MarkerGrid markerGrid;
     private AntManager antManager;
+    private static final float ANT_SPEED = 2f; // Velocità delle formiche
 
     public SceneManager(MarkerGrid markerGrid) {
         this.markerGrid = markerGrid;
@@ -53,7 +54,7 @@ public class SceneManager {
             float centerY2 = centerY1 - 200; // 200 px più in basso
             addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
 
-            antManager = new AntManager(10); // Crea 10 formiche
+            antManager = new AntManager(10, baseZone); // Passa la zona base
         } else if ("world_02".equals(sceneName)) {
             background = new Background(true); // Usa un'immagine
         }
@@ -61,12 +62,14 @@ public class SceneManager {
         // Puoi aggiungere altre scene qui
     }
 
-    public void update(float delta) {
+    public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         // Aggiorna le matrici
         markerGrid.updateMatrices();
-    }
+        // Aggiorna le formiche prima del rendering
+        if (antManager != null) {
+            antManager.update(ANT_SPEED); // Sposta le formiche di 10 unità per frame
+        }
 
-    public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         // Rendering con SpriteBatch (ad esempio per lo sfondo)
         batch.begin();
         if (background != null) {

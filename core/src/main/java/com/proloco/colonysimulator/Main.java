@@ -43,7 +43,6 @@ public class Main extends ApplicationAdapter {
 
         if (simulationRunning) {
             float delta = Gdx.graphics.getDeltaTime();
-            sceneManager.update(delta); // Aggiorna la scena e le matrici
         }
 
         // Delego il rendering al SceneManager
