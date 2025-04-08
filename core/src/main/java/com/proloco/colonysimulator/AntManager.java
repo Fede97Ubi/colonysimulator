@@ -18,6 +18,10 @@ public class AntManager {
         }
     }
 
+    public Array<Ant> getAnts() {
+        return ants;
+    }
+    
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         for (Ant ant : ants) {
             ant.render(batch, shapeRenderer); // Passa entrambi i parametri

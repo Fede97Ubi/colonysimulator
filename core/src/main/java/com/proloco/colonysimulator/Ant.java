@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Ant {
     private float x, y;
     private Texture texture;
     private float direction; // Direzione in radianti
+    private boolean hasFood = false; // Stato per il cibo
 
     public Ant(float x, float y) {
         this.x = x;
@@ -19,13 +22,50 @@ public class Ant {
         this.texture = new Texture("ant.png"); // Assicurati che ant.png sia nella cartella assets
     }
 
+    // Getter e setter per hasFood
+    public boolean hasFood() {
+        return hasFood;
+    }
+    
+    public void setHasFood(boolean value) {
+        this.hasFood = value;
+    }
+    
+    // Metodo per poter aggiornare (e possibilmente modificare) la direzione
+    public float getDirection() {
+        return direction;
+    }
+    
+    public void setDirection(float direction) {
+        this.direction = direction;
+    }
+
+    // Per comodità, mettiamo anche i getter per le coordinate e il raggio di collisione
+    public float getX() {
+        return x;
+    }
+    
+    public float getY() {
+        return y;
+    }
+    
+    // Supponiamo che il raggio di collisione della formica sia la metà dell'altezza dell'immagine
+    public float getCollisionRadius() {
+        return texture.getHeight() / 2f;
+    }
+
+    public void move(float speed) {
+        x += Math.cos(direction) * speed;
+        y += Math.sin(direction) * speed;
+    }
+
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         // Disegna l'immagine della formica
         float width = texture.getWidth();
         float height = texture.getHeight();
         float originX = width / 2;
         float originY = height / 2;
-        float rotation = (float) Math.toDegrees(direction); // Converti la direzione in gradi
+        float rotation = MathUtils.radiansToDegrees * direction; 
         batch.begin();
         batch.draw(texture, x - originX, y - originY, originX, originY, width, height, 1, 1, rotation + 90, 0, 0, (int) width, (int) height, false, false);
         batch.end();
@@ -49,12 +89,28 @@ public class Ant {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    public void move(float speed) {
-        x += Math.cos(direction) * speed;
-        y += Math.sin(direction) * speed;
-    }
-
     public void dispose() {
         texture.dispose();
+    }
+
+    public void onCollision(Collidable other, Vector2 collisionPoint, Vector2 collisionNormal) {
+        // Calcola il vettore direzionale attuale della formica.
+        Vector2 velocity = new Vector2(MathUtils.cos(direction), MathUtils.sin(direction));
+        // Calcola la riflessione: R = V - 2*(V·N)*N
+        float dot = velocity.dot(collisionNormal);
+        Vector2 reflected = velocity.sub(new Vector2(collisionNormal).scl(2 * dot));
+        // Aggiorna la direzione in radianti
+        direction = reflected.angleRad();
+
+        // Verifica se il centro della formica è penetrato nel blocco,
+        // e se necessario sposta la formica lungo la normale per essere fuori.
+        Vector2 center = new Vector2(x, y);
+        float distance = center.dst(collisionPoint);
+        if (distance < getCollisionRadius()) {
+            float penetration = getCollisionRadius() - distance + 1; // aggiungiamo un piccolo offset
+            Vector2 correction = new Vector2(collisionNormal).scl(penetration);
+            x += correction.x;
+            y += correction.y;
+        }
     }
 }

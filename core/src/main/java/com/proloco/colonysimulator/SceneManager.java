@@ -14,12 +14,15 @@ public class SceneManager {
     private Zone baseZone;
     private Zone foodZone;
     private MarkerGrid markerGrid;
+    private CollisionManager collisionManager;
     private AntManager antManager;
+    private static final int ANTS_QUANTITY = 10;
     private static final float ANT_SPEED = 2f; // Velocità delle formiche
 
     public SceneManager(MarkerGrid markerGrid) {
         this.markerGrid = markerGrid;
         objects = new Array<>();
+        collisionManager = new CollisionManager(this);
     }
 
     public void addObject(SceneObject object) {
@@ -28,6 +31,14 @@ public class SceneManager {
 
     public Array<SceneObject> getObjects() {
         return objects;
+    }
+
+    public Zone getBaseZone() {
+        return baseZone;
+    }
+    
+    public Zone getFoodZone() {
+        return foodZone;
     }
 
     public void initializeScene(String sceneName) {
@@ -54,7 +65,7 @@ public class SceneManager {
             float centerY2 = centerY1 - 200; // 200 px più in basso
             addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
 
-            antManager = new AntManager(10, baseZone); // Passa la zona base
+            antManager = new AntManager(ANTS_QUANTITY, baseZone); // Passa la zona base
         } else if ("world_02".equals(sceneName)) {
             background = new Background(true); // Usa un'immagine
         }
@@ -114,7 +125,11 @@ public class SceneManager {
         else {
             batch.end();
         }
-        
+
+        // -------- Controllo collisioni dopo il movimento --------
+        if (antManager != null) {
+            collisionManager.processCollisions(antManager);
+        }
     
         // (Opzionale) Disabilita blending se non necessario per altri disegni
         Gdx.gl.glDisable(GL20.GL_BLEND);
