@@ -65,7 +65,7 @@ public class SceneManager {
             float centerY2 = centerY1 - 200; // 200 px più in basso
             addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
 
-            antManager = new AntManager(ANTS_QUANTITY, baseZone); // Passa la zona base
+            antManager = new AntManager(ANTS_QUANTITY, ANT_SPEED, baseZone); // Passa la zona base
         } else if ("world_02".equals(sceneName)) {
             background = new Background(true); // Usa un'immagine
         }
@@ -78,7 +78,7 @@ public class SceneManager {
         markerGrid.updateMatrices();
         // Aggiorna le formiche prima del rendering
         if (antManager != null) {
-            antManager.update(ANT_SPEED); // Sposta le formiche di 10 unità per frame
+            antManager.update(); // sposta le formiche
         }
 
         // Rendering con SpriteBatch (ad esempio per lo sfondo)

@@ -7,14 +7,14 @@ import com.badlogic.gdx.utils.Array;
 public class AntManager {
     private Array<Ant> ants;
 
-    public AntManager(int numberOfAnts, Zone baseZone) {
+    public AntManager(int ANTS_QUANTITY, float ANT_SPEED, Zone baseZone) {
         ants = new Array<>();
-        for (int i = 0; i < numberOfAnts; i++) {
+        for (int i = 0; i < ANTS_QUANTITY; i++) {
             float angle = (float) (Math.random() * 2 * Math.PI);
             float radius = (float) (Math.random() * baseZone.getRadius());
             float x = baseZone.getCenterX() + (float) Math.cos(angle) * radius;
             float y = baseZone.getCenterY() + (float) Math.sin(angle) * radius;
-            ants.add(new Ant(x, y));
+            ants.add(new Ant(x, y, ANT_SPEED)); // Passa la velocità al costruttore
         }
     }
 
@@ -28,9 +28,9 @@ public class AntManager {
         }
     }
 
-    public void update(float speed) {
+    public void update() {
         for (Ant ant : ants) {
-            ant.move(speed);
+            ant.update();
         }
     }
 

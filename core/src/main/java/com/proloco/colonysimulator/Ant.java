@@ -10,14 +10,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Ant {
-    private float x, y;
     private Texture texture;
+    private float x, y;
+    private float speed; // Variabile per memorizzare la velocità
     private float direction; // Direzione in radianti
     private boolean hasFood = false; // Stato per il cibo
 
-    public Ant(float x, float y) {
+    public static final Color COLOR_WITHOUT_FOOD = new Color(1, 1, 1, 0.1f); // Bianco semitrasparente
+    public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.1f);    // Giallo semitrasparente
+
+    public Ant(float x, float y, float speed) {
         this.x = x;
         this.y = y;
+        this.speed = speed; // Inizializza la velocità
         this.direction = (float) (Math.random() * 2 * Math.PI); // Direzione casuale
         this.texture = new Texture("ant.png"); // Assicurati che ant.png sia nella cartella assets
     }
@@ -54,9 +59,31 @@ public class Ant {
         return texture.getHeight() / 2f;
     }
 
-    public void move(float speed) {
-        x += Math.cos(direction) * speed;
-        y += Math.sin(direction) * speed;
+    public void update() {
+        x += Math.cos(direction) * speed; // Usa la velocità memorizzata
+        y += Math.sin(direction) * speed; // Usa la velocità memorizzata
+
+        // Controlla se la formica è sopra una zona food
+        if (!hasFood && isOnFoodZone()) {
+            hasFood = true;
+        }
+
+        // Controlla se la formica è sopra una zona base
+        if (hasFood && isOnBaseZone()) {
+            hasFood = false;
+        }
+    }
+
+    private boolean isOnFoodZone() {
+        // Implementa la logica per verificare se la formica è sopra una zona food
+        // Ad esempio, controlla le coordinate (x, y) rispetto alle zone food
+        return false; // Sostituisci con la logica reale
+    }
+
+    private boolean isOnBaseZone() {
+        // Implementa la logica per verificare se la formica è sopra una zona base
+        // Ad esempio, controlla le coordinate (x, y) rispetto alle zone base
+        return false; // Sostituisci con la logica reale
     }
 
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
@@ -74,14 +101,14 @@ public class Ant {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        // Disegna la circonferenza e il centro semitrasparente
+        // Disegna il cerchietto con il colore appropriato
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.2f)); // Colore semitrasparente per il centro
-        shapeRenderer.circle(x, y, 5); // Disegna il centro come un piccolo cerchio
+        shapeRenderer.setColor(hasFood ? COLOR_WITH_FOOD : COLOR_WITHOUT_FOOD);
+        shapeRenderer.circle(x, y, 1); // Disegna il centro come un piccolo cerchio
         shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.5f)); // Colore semitrasparente per la circonferenza
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.2f)); // Colore semitrasparente per la circonferenza
         shapeRenderer.circle(x, y, height / 2); // Disegna la circonferenza con raggio pari all'altezza dell'immagine
         shapeRenderer.end();
 
