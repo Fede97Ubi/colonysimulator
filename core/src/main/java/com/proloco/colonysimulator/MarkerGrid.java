@@ -3,6 +3,7 @@ package com.proloco.colonysimulator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 
 public class MarkerGrid {
     public static final int GRID_SPACING = 20; // Spaziatura della griglia
@@ -121,4 +122,67 @@ public class MarkerGrid {
     public float[][] getFoodDistanceMatrix() {
         return foodDistanceMatrix;
     }
+
+    public void updateFromAnts(Array<Ant> ants) {
+        for (Ant ant : ants) {
+            // Converte le coordinate in indici della matrice
+            int i = (int) (ant.getY() / GRID_SPACING);
+            int j = (int) (ant.getX() / GRID_SPACING);
+    
+            // Aggiornamento della trampleMatrix (sempre)
+            if (i >= 0 && i < trampleMatrix.length && j >= 0 && j < trampleMatrix[0].length) {
+                trampleMatrix[i][j] = 10;
+            }
+            // Aggiornamento della matrice in base al valore di hasFood
+            if (!ant.hasFood()) {
+                baseDistanceMatrix[i][j] = 10;
+            } else {
+                foodDistanceMatrix[i][j] = 10;
+            }
+        }
+    }
+    
+    public float getDesiredDirection(float antX, float antY, boolean hasFood) {
+        // Determina la cella centrale in base alla posizione della formica
+        int centerI = (int) (antY / GRID_SPACING);
+        int centerJ = (int) (antX / GRID_SPACING);
+        float maxVal = 0;
+        int bestI = centerI;
+        int bestJ = centerJ;
+    
+        // Scegli la matrice da ispezionare in base al valore di hasFood:
+        // Se la formica ha cibo (hasFood == true) allora deve dirigersi verso la base;
+        // altrimenti, se non ha cibo, deve dirigersi verso il cibo.
+        float[][] matrixToSearch = hasFood ? baseDistanceMatrix : foodDistanceMatrix;
+    
+        // Scansiona un’area di 7x7 celle (range: -3 a +3 rispetto alla cella corrente)
+        for (int i = centerI - 3; i <= centerI + 3; i++) {
+            for (int j = centerJ - 3; j <= centerJ + 3; j++) {
+                if (i < 0 || j < 0 || i >= matrixToSearch.length || j >= matrixToSearch[0].length)
+                    continue;
+                if (matrixToSearch[i][j] > maxVal) {
+                    maxVal = matrixToSearch[i][j];
+                    bestI = i;
+                    bestJ = j;
+                }
+            }
+        }
+        // Se abbiamo trovato una cella con valore maggiore di 0, calcola la direzione
+        if (maxVal > 0) {
+            // Calcola il centro della cella corrente
+            float currentCenterX = centerJ * GRID_SPACING + GRID_SPACING / 2f;
+            float currentCenterY = centerI * GRID_SPACING + GRID_SPACING / 2f;
+            // Calcola il centro della cella con il valore migliore
+            float bestCenterX = bestJ * GRID_SPACING + GRID_SPACING / 2f;
+            float bestCenterY = bestI * GRID_SPACING + GRID_SPACING / 2f;
+            // Determina la differenza
+            float dx = bestCenterX - currentCenterX;
+            float dy = bestCenterY - currentCenterY;
+            // Restituisce l'angolo (in radianti)
+            return (float) Math.atan2(dy, dx);
+        }
+        // Se nessuna cella ha valore > 0, restituisce un indicatore (ad esempio -1) per non modificare la direzione
+        return -1;
+    }
+    
 }

@@ -16,8 +16,8 @@ public class Ant {
     private float direction; // Direzione in radianti
     private boolean hasFood = false; // Stato per il cibo
 
-    public static final Color COLOR_WITHOUT_FOOD = new Color(1, 1, 1, 0.1f); // Bianco semitrasparente
-    public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.1f);    // Giallo semitrasparente
+    public static final Color COLOR_WITHOUT_FOOD = new Color(1, 1, 1, 0f); // Bianco semitrasparente
+    public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.7f);    // Giallo semitrasparente
 
     public Ant(float x, float y, float speed) {
         this.x = x;
@@ -34,6 +34,7 @@ public class Ant {
     
     public void setHasFood(boolean value) {
         this.hasFood = value;
+        System.out.println("Ant has food: " + hasFood);
     }
     
     // Metodo per poter aggiornare (e possibilmente modificare) la direzione
@@ -104,7 +105,7 @@ public class Ant {
         // Disegna il cerchietto con il colore appropriato
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(hasFood ? COLOR_WITH_FOOD : COLOR_WITHOUT_FOOD);
-        shapeRenderer.circle(x, y, 1); // Disegna il centro come un piccolo cerchio
+        shapeRenderer.circle(x, y, 4); // Disegna il centro come un piccolo cerchio
         shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

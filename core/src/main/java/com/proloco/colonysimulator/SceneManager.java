@@ -15,6 +15,7 @@ public class SceneManager {
     private Zone foodZone;
     private MarkerGrid markerGrid;
     private CollisionManager collisionManager;
+    private InteractionManager interactionManager;
     private AntManager antManager;
     private static final int ANTS_QUANTITY = 10;
     private static final float ANT_SPEED = 2f; // Velocità delle formiche
@@ -23,6 +24,7 @@ public class SceneManager {
         this.markerGrid = markerGrid;
         objects = new Array<>();
         collisionManager = new CollisionManager(this);
+        interactionManager = new InteractionManager(this);
     }
 
     public void addObject(SceneObject object) {
@@ -130,6 +132,25 @@ public class SceneManager {
         if (antManager != null) {
             collisionManager.processCollisions(antManager);
         }
+
+        // -------- Controllo interazioni (trigger delle zone) --------
+        if (antManager != null) {
+            interactionManager.processInteractions(antManager);
+        }
+
+        if (antManager != null) {
+            markerGrid.updateFromAnts(antManager.getAnts());
+        }
+
+        if (antManager != null) {
+            for (Ant ant : antManager.getAnts()) {
+                // Il metodo restituisce -1 se nessuna cella rilevante viene trovata
+                float newDirection = markerGrid.getDesiredDirection(ant.getX(), ant.getY(), ant.hasFood());
+                if (newDirection >= 0) {
+                    ant.setDirection(newDirection);
+                }
+            }
+        }        
     
         // (Opzionale) Disabilita blending se non necessario per altri disegni
         Gdx.gl.glDisable(GL20.GL_BLEND);
