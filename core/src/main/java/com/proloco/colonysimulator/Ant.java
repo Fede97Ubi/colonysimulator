@@ -12,8 +12,8 @@ import com.badlogic.gdx.math.MathUtils;
 public class Ant {
     private Texture texture;
     private float x, y;
-    private float speed; // Velocità della formica
-    private float direction; // Direzione in radianti
+    private float ANT_SPEED = ConfigManager.getAntSpeed();
+    private float ANT_DIRECTION; // Direzione in radianti
     private boolean hasFood = false; // Stato per il cibo
 
     // Costante e variabile per timeDistance
@@ -23,11 +23,11 @@ public class Ant {
     public static final Color COLOR_WITHOUT_FOOD = new Color(1, 1, 1, 0.1f); // Bianco semitrasparente
     public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.1f);    // Giallo semitrasparente
 
-    public Ant(float x, float y, float speed) {
+    public Ant(float x, float y) {
         this.x = x;
         this.y = y;
-        this.speed = speed; // Inizializza la velocità
-        this.direction = (float) (Math.random() * 2 * Math.PI); // Direzione casuale
+        this.ANT_SPEED = ANT_SPEED; // Inizializza la velocità
+        this.ANT_DIRECTION = (float) (Math.random() * 2 * Math.PI); // Direzione casuale
         this.texture = new Texture("ant.png"); // Assicurati che ant.png sia nella cartella assets
     }
 
@@ -53,11 +53,11 @@ public class Ant {
     }
     
     public float getDirection() {
-        return direction;
+        return ANT_DIRECTION;
     }
     
     public void setDirection(float direction) {
-        this.direction = direction;
+        this.ANT_DIRECTION = direction;
     }
 
     public float getX() {
@@ -75,8 +75,8 @@ public class Ant {
 
     public void update() {
         // Movimento della formica
-        x += Math.cos(direction) * speed;
-        y += Math.sin(direction) * speed;
+        x += Math.cos(ANT_DIRECTION) * ANT_SPEED;
+        y += Math.sin(ANT_DIRECTION) * ANT_SPEED;
 
         // Decrementa timeDistance ad ogni update (si può limitare a 0 se necessario)
         timeDistance -= 0.02f;
@@ -112,7 +112,7 @@ public class Ant {
         float height = texture.getHeight();
         float originX = width / 2;
         float originY = height / 2;
-        float rotation = MathUtils.radiansToDegrees * direction;
+        float rotation = MathUtils.radiansToDegrees * ANT_DIRECTION;
         batch.begin();
         batch.draw(texture, x - originX, y - originY, originX, originY, width, height, 1, 1, rotation + 90, 0, 0, (int) width, (int) height, false, false);
         batch.end();
@@ -142,12 +142,12 @@ public class Ant {
 
     public void onCollision(Collidable other, Vector2 collisionPoint, Vector2 collisionNormal) {
         // Calcola il vettore attuale della formica
-        Vector2 velocity = new Vector2(MathUtils.cos(direction), MathUtils.sin(direction));
+        Vector2 velocity = new Vector2(MathUtils.cos(ANT_DIRECTION), MathUtils.sin(ANT_DIRECTION));
         // Calcola la riflessione: R = V - 2*(V·N)*N
         float dot = velocity.dot(collisionNormal);
         Vector2 reflected = velocity.sub(new Vector2(collisionNormal).scl(2 * dot));
         // Aggiorna la direzione (in radianti)
-        direction = reflected.angleRad();
+        ANT_DIRECTION = reflected.angleRad();
 
         // Correzione di posizione se la formica è penetrata
         Vector2 center = new Vector2(x, y);

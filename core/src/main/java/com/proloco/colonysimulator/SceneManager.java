@@ -17,8 +17,6 @@ public class SceneManager {
     private CollisionManager collisionManager;
     private InteractionManager interactionManager;
     private AntManager antManager;
-    private static final int ANTS_QUANTITY = ConfigManager.getAntsQuantity();
-    private static final float ANT_SPEED = ConfigManager.getAntSpeed(); // Velocità delle formiche
 
     public SceneManager() {
         objects = new Array<>();
@@ -69,7 +67,7 @@ public class SceneManager {
             float centerY2 = centerY1 - 200; // 200 px più in basso
             addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
 
-            antManager = new AntManager(ANTS_QUANTITY, ANT_SPEED, baseZone); // Passa la zona base
+            antManager = new AntManager(baseZone); // Passa la zona base
         } else if ("world_02".equals(sceneName)) {
             background = new Background(true); // Usa un'immagine
         }
