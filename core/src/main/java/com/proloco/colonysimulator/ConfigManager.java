@@ -14,12 +14,25 @@ public class ConfigManager {
     static {
         // Carica il file JSON se esiste
         try {
-            FileHandle file = Gdx.files.local("config.json");
+            FileHandle file = Gdx.files.internal("world/config.json");
             if (file.exists()) {
+                System.out.println("File config.json trovato: " + file.path());
                 Json json = new Json();
                 ConfigData data = json.fromJson(ConfigData.class, file.readString());
+                GRID_SPACING = data.DEFAULT_GRID_SPACING;
+                ANTS_QUANTITY = data.DEFAULT_ANTS_QUANTITY;
+                ANT_SPEED = data.DEFAULT_ANT_SPEED;
+                ANT_RANGE = data.DEFAULT_ANT_RANGE;
                 ANT_TIME_DISTANCE = data.DEFAULT_TIME_DISTANCE;
+            } else {
+                System.err.println("File config.json non trovato nel percorso specificato.");
             }
+            System.out.println("Configurazione caricata: " +
+                    "GRID_SPACING=" + GRID_SPACING +
+                    ", ANTS_QUANTITY=" + ANTS_QUANTITY +
+                    ", ANT_SPEED=" + ANT_SPEED +
+                    ", ANT_RANGE=" + ANT_RANGE +
+                    ", ANT_TIME_DISTANCE=" + ANT_TIME_DISTANCE);
         } catch (Exception e) {
             System.err.println("Errore durante il caricamento della configurazione: " + e.getMessage());
         }
@@ -30,19 +43,19 @@ public class ConfigManager {
     }
 
     public static int getAntsQuantity() {
-        return 40; // Numero di formiche predefinito
+        return ANTS_QUANTITY; // Usa la variabile aggiornata
     }
 
     public static float getAntSpeed() {
-        return ANT_SPEED; // Velocità delle formiche predefinita
+        return ANT_SPEED; // Usa la variabile aggiornata
     }
 
     public static int getGridSpacing() {
-        return GRID_SPACING; // Spaziatura della griglia predefinita
+        return GRID_SPACING; // Usa la variabile aggiornata
     }
 
     public static int getAntRange() {
-        return ANT_RANGE; // Raggio di ricerca delle formiche predefinito
+        return ANT_RANGE; // Usa la variabile aggiornata
     }
 
     // Classe interna per mappare i dati JSON

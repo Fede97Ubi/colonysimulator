@@ -3,3 +3,4 @@ ant.png
 background.jpg
 background.png
 libgdx.png
+world/config.json

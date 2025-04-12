@@ -24,6 +24,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         batch = new SpriteBatch();
+        System.out.println("Ant Speed: " + ConfigManager.getAntSpeed());
         shapeRenderer = new ShapeRenderer();
 
         // Inizializza SceneManager
