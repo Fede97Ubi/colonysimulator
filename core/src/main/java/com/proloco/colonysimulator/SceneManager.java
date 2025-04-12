@@ -13,15 +13,14 @@ public class SceneManager {
     private Background background;
     private Zone baseZone;
     private Zone foodZone;
-    private MarkerGrid markerGrid;
+    private MarkerGrid markerGrid; // Dichiarazione spostata qui
     private CollisionManager collisionManager;
     private InteractionManager interactionManager;
     private AntManager antManager;
-    private static final int ANTS_QUANTITY = 10;
-    private static final float ANT_SPEED = 2f; // Velocità delle formiche
+    private static final int ANTS_QUANTITY = ConfigManager.getAntsQuantity();
+    private static final float ANT_SPEED = ConfigManager.getAntSpeed(); // Velocità delle formiche
 
-    public SceneManager(MarkerGrid markerGrid) {
-        this.markerGrid = markerGrid;
+    public SceneManager() {
         objects = new Array<>();
         collisionManager = new CollisionManager(this);
         interactionManager = new InteractionManager(this);
@@ -54,6 +53,9 @@ public class SceneManager {
 
             // Posizione e dimensioni della zona cibo
             foodZone = new Zone(1650, 150, 70, new Color(1f, 1f, 0f, 0.5f), "food");
+
+            // Crea MarkerGrid dopo aver creato le zone
+            markerGrid = new MarkerGrid(baseZone, foodZone);
 
             float blockWidth1 = 100;
             float blockHeight1 = 200;

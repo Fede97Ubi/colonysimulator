@@ -26,11 +26,8 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
-        // Inizializza MarkerGrid
-        markerGrid = new MarkerGrid();
-
         // Inizializza SceneManager
-        sceneManager = new SceneManager(markerGrid); // Passa MarkerGrid a SceneManager
+        sceneManager = new SceneManager();
         sceneManager.initializeScene("world_01");
 
         simulationRunning = true; // Prepara la simulazione
