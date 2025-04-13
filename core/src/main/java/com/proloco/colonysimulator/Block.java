@@ -11,7 +11,7 @@ public class Block extends SceneObject {
 
     @Override
     public void render(ShapeRenderer shapeRenderer) {
-        float cornerRadius = 20; // Raggio degli angoli stondati
+        float cornerRadius = 34; // Raggio degli angoli stondati
         float borderCornerRadius = cornerRadius + 4; // Raggio ridotto per il bordo
 
         // Disegna il bordo
@@ -24,12 +24,12 @@ public class Block extends SceneObject {
         shapeRenderer.circle(x - 5 + width + 10 - borderCornerRadius, y - 5 + height + 10 - borderCornerRadius, borderCornerRadius); // Angolo in alto a destra
 
         // Disegna l'interno
-        //shapeRenderer.setColor(fillColor);
-        //shapeRenderer.rect(x + cornerRadius, y, width - 2 * cornerRadius, height); // Parte centrale
-        //shapeRenderer.rect(x, y + cornerRadius, width, height - 2 * cornerRadius); // Parte verticale
-        //shapeRenderer.circle(x + cornerRadius, y + cornerRadius, cornerRadius); // Angolo in basso a sinistra
-        //shapeRenderer.circle(x + width - cornerRadius, y + cornerRadius, cornerRadius); // Angolo in basso a destra
-        //shapeRenderer.circle(x + cornerRadius, y + height - cornerRadius, cornerRadius); // Angolo in alto a sinistra
-        //shapeRenderer.circle(x + width - cornerRadius, y + height - cornerRadius, cornerRadius); // Angolo in alto a destra
+        shapeRenderer.setColor(fillColor);
+        shapeRenderer.rect(x + cornerRadius, y, width - 2 * cornerRadius, height); // Parte centrale
+        shapeRenderer.rect(x, y + cornerRadius, width, height - 2 * cornerRadius); // Parte verticale
+        shapeRenderer.circle(x + cornerRadius, y + cornerRadius, cornerRadius); // Angolo in basso a sinistra
+        shapeRenderer.circle(x + width - cornerRadius, y + cornerRadius, cornerRadius); // Angolo in basso a destra
+        shapeRenderer.circle(x + cornerRadius, y + height - cornerRadius, cornerRadius); // Angolo in alto a sinistra
+        shapeRenderer.circle(x + width - cornerRadius, y + height - cornerRadius, cornerRadius); // Angolo in alto a destra
     }
 }

@@ -8,7 +8,7 @@ public class DesktopLauncher {
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Colony Simulator");
-        config.setWindowedMode(1800, 800); // Imposta larghezza e altezza
+        config.setWindowedMode(1920, 960); // Imposta larghezza e altezza
         config.setResizable(false);      // Blocca il ridimensionamento della finestra
         new Lwjgl3Application(new Main(), config);
     }

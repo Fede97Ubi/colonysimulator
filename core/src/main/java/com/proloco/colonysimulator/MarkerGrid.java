@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class MarkerGrid {
     public static final int GRID_SPACING = ConfigManager.getGridSpacing();
+    public static final float TIME_DISTANCE_FRACTION = ConfigManager.getDefaultTimeDistance()*1.4f;
     private float[][] trampleMatrix;
     private float[][] baseDistanceMatrix;
     private float[][] foodDistanceMatrix;
@@ -130,7 +131,7 @@ public class MarkerGrid {
             for (int j = 0; j < activeMatrix[i].length; j++) {
                 float value = activeMatrix[i][j];
                 if (value > 0) {
-                    float alpha = Math.min(value / 50f, 1f); // Calcola l'alpha (massimo 1)
+                    float alpha = Math.min(value / TIME_DISTANCE_FRACTION, 1f); // Calcola l'alpha (massimo 1)
                     shapeRenderer.setColor(new Color(1f, 1f, 1f, alpha)); // Colore basato sul valore
                     float x = j * GRID_SPACING;
                     float y = i * GRID_SPACING;

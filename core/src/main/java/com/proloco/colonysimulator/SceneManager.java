@@ -46,8 +46,8 @@ public class SceneManager {
         if ("world_01".equals(sceneName)) {
             background = new Background(false); // Usa il pattern
 
-            baseZone = new Zone(150, 650, 80, new Color(0.5f, 0.5f, 0.5f, 0.5f), "base");
-            foodZone = new Zone(1650, 150, 70, new Color(1f, 1f, 0f, 0.5f), "food");
+            baseZone = new Zone(150, 850, 80, new Color(0.5f, 0.5f, 0.5f, 0.5f), "base");
+            foodZone = new Zone(1750, 150, 70, new Color(1f, 1f, 0f, 0.5f), "food");
             markerGrid = new MarkerGrid(baseZone, foodZone);
 
             // Itera sui blocchi definiti in ConfigManager

@@ -2,7 +2,8 @@ package com.proloco.colonysimulator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.Json; 
+import java.util.Random;
 
 public class ConfigManager {
     private static int GRID_SPACING = 20; // Spaziatura della griglia predefinita
@@ -13,6 +14,8 @@ public class ConfigManager {
     private static BlockConfig[] BLOCKS; // Array di configurazioni dei blocchi
 
     static {
+        String jsonBlocks = generateBlocksJSON();
+        System.out.println(jsonBlocks);
         // Carica il file JSON se esiste
         try {
             FileHandle file = Gdx.files.internal("world/config.json");
@@ -38,6 +41,57 @@ public class ConfigManager {
         } catch (Exception e) {
             System.err.println("Errore durante il caricamento della configurazione: " + e.getMessage());
         }
+    }
+
+    public static String generateBlocksJSON() {
+        int AVAILABLE_WIDTH = 1920;
+        int AVAILABLE_HEIGHT = 960;
+        int numberOfBlocks = 20;
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n  \"BLOCKS\": [\n");
+        // Calcola il numero minimo di unità per ottenere dimensioni > 50
+        int minUnits = (int) Math.ceil(80.0 / GRID_SPACING);
+        // Limite massimo in unità in base a un blocco non superiore a 350
+        int maxUnits = 350 / GRID_SPACING;
+        Random rand = new Random();
+
+        for (int i = 0; i < numberOfBlocks; i++) {
+            // Genera casualmente il numero di unità per larghezza (m) e altezza (n)
+            int m = rand.nextInt(maxUnits - minUnits + 1) + minUnits;
+            int n = rand.nextInt(maxUnits - minUnits + 1) + minUnits;
+
+            int blockWidth = m * GRID_SPACING;
+            int blockHeight = n * GRID_SPACING;
+
+            // Calcola la posizione x seguendo la regola:
+            // Se m è pari, x è multiplo di GRID_SPACING; se dispari, x è multiplo di GRID_SPACING + GRID_SPACING/2
+            // Calcolo della coordinata x in base a m (numero di unità in larghezza)
+            int x;          // m dispari -> x = multiplo di GRID_SPACING + GRID_SPACING/2
+                int maxK = (AVAILABLE_WIDTH - blockWidth - GRID_SPACING / 2) / GRID_SPACING;
+                int k = rand.nextInt(maxK + 1);
+                x = k * GRID_SPACING + GRID_SPACING / 2;
+
+            // Stessa logica per y in base a n
+            int y;        // n dispari -> y = multiplo di GRID_SPACING + GRID_SPACING/2
+                int maxJ = (AVAILABLE_HEIGHT - blockHeight - GRID_SPACING / 2) / GRID_SPACING;
+                int j = rand.nextInt(maxJ + 1);
+                y = j * GRID_SPACING + GRID_SPACING / 2;
+
+            sb.append("    { \"x\": ").append(x)
+                .append(", \"y\": ").append(y)
+                .append(", \"width\": ").append(blockWidth)
+                .append(", \"height\": ").append(blockHeight)
+                .append(" }");
+            
+            if (i != numberOfBlocks - 1) {
+                sb.append(",\n");
+            } else {
+                sb.append("\n");
+            }
+        }
+        
+        sb.append("  ]\n}");
+        return sb.toString();
     }
 
     public static float getDefaultTimeDistance() {
