@@ -46,26 +46,14 @@ public class SceneManager {
         if ("world_01".equals(sceneName)) {
             background = new Background(false); // Usa il pattern
 
-            // Posizione e dimensioni della zona base
             baseZone = new Zone(150, 650, 80, new Color(0.5f, 0.5f, 0.5f, 0.5f), "base");
-
-            // Posizione e dimensioni della zona cibo
             foodZone = new Zone(1650, 150, 70, new Color(1f, 1f, 0f, 0.5f), "food");
-
-            // Crea MarkerGrid dopo aver creato le zone
             markerGrid = new MarkerGrid(baseZone, foodZone);
 
-            float blockWidth1 = 100;
-            float blockHeight1 = 200;
-            float centerX1 = (com.badlogic.gdx.Gdx.graphics.getWidth() - blockWidth1) / 2;
-            float centerY1 = (com.badlogic.gdx.Gdx.graphics.getHeight() - blockHeight1) / 2;
-            addObject(new Block(centerX1, centerY1, blockWidth1, blockHeight1)); // Primo blocco
-
-            float blockWidth2 = 50;
-            float blockHeight2 = 100;
-            float centerX2 = centerX1 - 20; // 20 px più a sinistra
-            float centerY2 = centerY1 - 200; // 200 px più in basso
-            addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
+            // Itera sui blocchi definiti in ConfigManager
+            for (ConfigManager.BlockConfig block : ConfigManager.getBlocks()) {
+                addObject(new Block(block.x, block.y, block.width, block.height));
+            }
 
             antManager = new AntManager(baseZone, markerGrid); // Passa la zona base
         } else if ("world_02".equals(sceneName)) {
@@ -144,7 +132,7 @@ public class SceneManager {
 
         if (antManager != null) {
             antManager.updateAntsDirections();
-        }        
+        } 
     
         // (Opzionale) Disabilita blending se non necessario per altri disegni
         Gdx.gl.glDisable(GL20.GL_BLEND);

@@ -10,6 +10,7 @@ public class ConfigManager {
     private static float ANT_SPEED = 3.0f; // Velocità delle formiche predefinita
     private static int ANT_RANGE = 3; // Raggio di ricerca delle formiche predefinito
     private static float ANT_TIME_DISTANCE = 40.0f; // Valore di default
+    private static BlockConfig[] BLOCKS; // Array di configurazioni dei blocchi
 
     static {
         // Carica il file JSON se esiste
@@ -24,6 +25,7 @@ public class ConfigManager {
                 ANT_SPEED = data.DEFAULT_ANT_SPEED;
                 ANT_RANGE = data.DEFAULT_ANT_RANGE;
                 ANT_TIME_DISTANCE = data.DEFAULT_TIME_DISTANCE;
+                BLOCKS = data.BLOCKS; // Carica i blocchi
             } else {
                 System.err.println("File config.json non trovato nel percorso specificato.");
             }
@@ -58,6 +60,10 @@ public class ConfigManager {
         return ANT_RANGE; // Usa la variabile aggiornata
     }
 
+    public static BlockConfig[] getBlocks() {
+        return BLOCKS; // Restituisce i dettagli dei blocchi
+    }
+
     // Classe interna per mappare i dati JSON
     private static class ConfigData {
         public int DEFAULT_GRID_SPACING;
@@ -65,5 +71,13 @@ public class ConfigManager {
         public float DEFAULT_ANT_SPEED;
         public int DEFAULT_ANT_RANGE;
         public float DEFAULT_TIME_DISTANCE;
+        public BlockConfig[] BLOCKS; // Array di blocchi
+    }
+
+    public static class BlockConfig {
+        public float x;
+        public float y;
+        public float width;
+        public float height;
     }
 }

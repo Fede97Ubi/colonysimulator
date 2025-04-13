@@ -1,7 +1,11 @@
 {
   "DEFAULT_GRID_SPACING": 20,
-  "DEFAULT_ANTS_QUANTITY": 20,
+  "DEFAULT_ANTS_QUANTITY": 1000,
   "DEFAULT_ANT_SPEED": 4.0,
   "DEFAULT_ANT_RANGE": 3,
-  "DEFAULT_TIME_DISTANCE": 40.0
+  "DEFAULT_TIME_DISTANCE": 40.0,
+  "BLOCKS": [
+    { "x": 850, "y": 300, "width": 100, "height": 200 },
+    { "x": 830, "y": 100, "width": 50, "height": 100 }
+  ]
 }
