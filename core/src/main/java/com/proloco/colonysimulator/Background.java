@@ -10,9 +10,15 @@ public class Background {
     private Texture backgroundTexture;
     private Texture stripeTexture;
     private boolean useImageBackground;
+    private int width;
+    private int height;
+    private int screenWidth = Gdx.graphics.getWidth(); // Larghezza dello schermo
+    private int screenHeight = Gdx.graphics.getHeight(); // Altezza dello schermo
 
-    public Background(boolean useImageBackground) {
+    public Background(boolean useImageBackground, int width, int height) {
         this.useImageBackground = useImageBackground;
+        this.width = width;
+        this.height = height;
 
         if (useImageBackground) {
             stripeTexture = createStripeTexture(); // Crea il pattern diagonale
@@ -23,8 +29,6 @@ public class Background {
     }
 
     private Texture createPatternTexture() {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
 
         // Colori migliorati per un contrasto più visibile
@@ -66,8 +70,6 @@ public class Background {
     }
 
     private Texture createStripeTexture() {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
 
         // Colori delle strisce migliorati per un aspetto più morbido
@@ -94,22 +96,20 @@ public class Background {
     }
 
     public void render(SpriteBatch batch) {
-        int screenWidth = Gdx.graphics.getWidth();
-        int screenHeight = Gdx.graphics.getHeight();
 
         if (useImageBackground) {
             // Disegna il pattern diagonale
-            batch.draw(stripeTexture, 0, 0, screenWidth, screenHeight);
+            batch.draw(stripeTexture, 0, 0, width, height);
 
             // Disegna l'immagine centrata sopra il pattern
             int imgWidth = backgroundTexture.getWidth();
             int imgHeight = backgroundTexture.getHeight();
-            int x = (screenWidth - imgWidth) / 2;
-            int y = (screenHeight - imgHeight) / 2;
+            int x = (width - imgWidth) / 2;
+            int y = (height - imgHeight) / 2;
             batch.draw(backgroundTexture, x, y, imgWidth, imgHeight);
         } else {
             // Disegna il tema geometrico
-            batch.draw(backgroundTexture, 0, 0, screenWidth, screenHeight);
+            batch.draw(backgroundTexture, 0, 0, width, height);
         }
     }
 

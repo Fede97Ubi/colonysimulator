@@ -16,9 +16,9 @@ public class MarkerGrid {
     private Array<int[]> baseZoneCells; // Celle completamente incluse nella zona base
     private Array<int[]> foodZoneCells; // Celle completamente incluse nella zona cibo
 
-    public MarkerGrid(Zone baseZone, Zone foodZone) {
-        int rows = Gdx.graphics.getHeight() / GRID_SPACING;
-        int cols = Gdx.graphics.getWidth() / GRID_SPACING;
+    public MarkerGrid(int width, int height, Zone baseZone, Zone foodZone) {
+        int cols = width / GRID_SPACING;
+        int rows = height / GRID_SPACING;
 
         // Inizializza le matrici
         trampleMatrix = new float[rows][cols];

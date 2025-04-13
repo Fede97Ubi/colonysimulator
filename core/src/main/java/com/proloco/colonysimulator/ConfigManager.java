@@ -44,9 +44,9 @@ public class ConfigManager {
     }
 
     public static String generateBlocksJSON() {
-        int AVAILABLE_WIDTH = 1920;
+        int AVAILABLE_WIDTH = 1520;
         int AVAILABLE_HEIGHT = 960;
-        int numberOfBlocks = 20;
+        int numberOfBlocks = 10;
         StringBuilder sb = new StringBuilder();
         sb.append("{\n  \"BLOCKS\": [\n");
         // Calcola il numero minimo di unità per ottenere dimensioni > 50

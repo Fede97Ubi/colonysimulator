@@ -7,17 +7,17 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SceneObject implements Collidable {
     protected float x, y, width, height;
-    protected Color fillColor;
-    protected Color borderColor;
+    protected Color fillColor = new Color(0.18f, 0.18f, 0.18f, 1);
+    protected Color borderColor = new Color(0.15f, 0.15f, 0.15f, 1);
+    protected Color colorLine = new Color(0.1f, 0.1f, 0.1f, 1);
+    
     protected Rectangle bounds;
 
-    public SceneObject(float x, float y, float width, float height, Color fillColor, Color borderColor) {
+    public SceneObject(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.fillColor = fillColor;
-        this.borderColor = borderColor;
         this.bounds = new Rectangle(x, y, width, height);
     }
 
