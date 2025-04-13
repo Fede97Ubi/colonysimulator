@@ -18,22 +18,21 @@ public class Ant {
 
     // Costante e variabile per timeDistance
     public static final float DEFAULT_TIME_DISTANCE = ConfigManager.getDefaultTimeDistance();
-    private float timeDistance = DEFAULT_TIME_DISTANCE;
+    private float timeDistance = this.DEFAULT_TIME_DISTANCE;
 
     public static final Color COLOR_WITHOUT_FOOD = new Color(1, 1, 1, 0.1f); // Bianco semitrasparente
-    public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.1f);    // Giallo semitrasparente
+    public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.8f);    // Giallo semitrasparente
 
     public Ant(float x, float y) {
         this.x = x;
         this.y = y;
-        this.ANT_SPEED = ANT_SPEED; // Inizializza la velocità
         this.ANT_DIRECTION = (float) (Math.random() * 2 * Math.PI); // Direzione casuale
         this.texture = new Texture("ant.png"); // Assicurati che ant.png sia nella cartella assets
     }
 
     // Getter e setter per hasFood
     public boolean hasFood() {
-        return hasFood;
+        return this.hasFood;
     }
     
     public void setHasFood(boolean value) {
@@ -49,11 +48,11 @@ public class Ant {
     
     // Metodo per resettare il timeDistance
     private void resetTimeDistance() {
-        this.timeDistance = DEFAULT_TIME_DISTANCE;
+        this.timeDistance = this.DEFAULT_TIME_DISTANCE;
     }
     
     public float getDirection() {
-        return ANT_DIRECTION;
+        return this.ANT_DIRECTION;
     }
     
     public void setDirection(float direction) {
@@ -75,8 +74,8 @@ public class Ant {
 
     public void update() {
         // Movimento della formica
-        x += Math.cos(ANT_DIRECTION) * ANT_SPEED;
-        y += Math.sin(ANT_DIRECTION) * ANT_SPEED;
+        x += Math.cos(this.ANT_DIRECTION) * this.ANT_SPEED;
+        y += Math.sin(this.ANT_DIRECTION) * this.ANT_SPEED;
 
         // Decrementa timeDistance ad ogni update (si può limitare a 0 se necessario)
         timeDistance -= 0.02f;
@@ -87,12 +86,34 @@ public class Ant {
         // Controlla se la formica è sopra una zona food o base
         // (Questi metodi restituiscono true se le coordinate sono nel range; 
         // implementali secondo la logica reale dell'applicazione)
-        if (!hasFood && isOnFoodZone()) {
+        if (!this.hasFood && isOnFoodZone()) {
             setHasFood(true);
         }
-        if (hasFood && isOnBaseZone()) {
+        if (this.hasFood && isOnBaseZone()) {
             setHasFood(false);
         }
+    }
+
+    public float perturbDirection(float currentDirection, float maxDelta) {
+        // Calcola un delta casuale nell'intervallo [-maxDelta, maxDelta]
+        float delta = (float)(Math.random() * 2 * maxDelta) - maxDelta;
+        // Applica la variazione
+        float newDirection = currentDirection + delta;
+        // Normalizza l'angolo per renderlo compreso tra 0 e 2π
+        newDirection = newDirection % ((float) (2 * Math.PI));
+        if (newDirection < 0) {
+            newDirection += 2 * Math.PI;
+        }
+        return newDirection;
+    }
+
+    public void updateDirection(MarkerGrid markerGrid) {
+        // Il metodo restituisce -1 se nessuna cella rilevante viene trovata
+        float newDirection = markerGrid.getDesiredDirection(this.x, this.y, this.hasFood);
+        if (newDirection >= 0) {
+            this.ANT_DIRECTION = newDirection;
+        }
+        this.ANT_DIRECTION = perturbDirection(this.ANT_DIRECTION, 0.1f);
     }
 
     // Questi metodi devono essere implementati in base alla logica della zona
@@ -114,7 +135,7 @@ public class Ant {
         float originY = height / 2;
         float rotation = MathUtils.radiansToDegrees * ANT_DIRECTION;
         batch.begin();
-        batch.draw(texture, x - originX, y - originY, originX, originY, width, height, 1, 1, rotation + 90, 0, 0, (int) width, (int) height, false, false);
+        batch.draw(this.texture, this.x - originX, this.y - originY, originX, originY, width, height, 1, 1, rotation + 90, 0, 0, (int) width, (int) height, false, false);
         batch.end();
 
         // Abilita blending per la trasparenza
@@ -123,13 +144,13 @@ public class Ant {
 
         // Disegna il cerchietto con il colore appropriato
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(hasFood ? COLOR_WITH_FOOD : COLOR_WITHOUT_FOOD);
-        shapeRenderer.circle(x, y, 1);
+        shapeRenderer.setColor(this.hasFood ? this.COLOR_WITH_FOOD : this.COLOR_WITHOUT_FOOD);
+        shapeRenderer.circle(this.x, this.y, 5);
         shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
-        shapeRenderer.circle(x, y, height / 2);
+        shapeRenderer.circle(this.x, this.y, height / 2);
         shapeRenderer.end();
 
         // Disabilita blending

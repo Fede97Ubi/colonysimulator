@@ -67,7 +67,7 @@ public class SceneManager {
             float centerY2 = centerY1 - 200; // 200 px più in basso
             addObject(new Block(centerX2, centerY2, blockWidth2, blockHeight2)); // Secondo blocco
 
-            antManager = new AntManager(baseZone); // Passa la zona base
+            antManager = new AntManager(baseZone, markerGrid); // Passa la zona base
         } else if ("world_02".equals(sceneName)) {
             background = new Background(true); // Usa un'immagine
         }
@@ -139,17 +139,11 @@ public class SceneManager {
         }
 
         if (antManager != null) {
-            markerGrid.updateFromAnts(antManager.getAnts());
+            antManager.updateMatrix();
         }
 
         if (antManager != null) {
-            for (Ant ant : antManager.getAnts()) {
-                // Il metodo restituisce -1 se nessuna cella rilevante viene trovata
-                float newDirection = markerGrid.getDesiredDirection(ant.getX(), ant.getY(), ant.hasFood());
-                if (newDirection >= 0) {
-                    ant.setDirection(newDirection);
-                }
-            }
+            antManager.updateAntsDirections();
         }        
     
         // (Opzionale) Disabilita blending se non necessario per altri disegni
