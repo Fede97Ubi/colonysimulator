@@ -128,33 +128,29 @@ public class Ant {
     }
 
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
-        // Rendering dell'immagine della formica
-        float width = texture.getWidth();
-        float height = texture.getHeight();
-        float originX = width / 2;
-        float originY = height / 2;
-        float rotation = MathUtils.radiansToDegrees * ANT_DIRECTION;
-        batch.begin();
-        batch.draw(this.texture, this.x - originX, this.y - originY, originX, originY, width, height, 1, 1, rotation + 90, 0, 0, (int) width, (int) height, false, false);
-        batch.end();
+        if (batch != null) {
+            // Rendering dell'immagine della formica
+            float width = texture.getWidth();
+            float height = texture.getHeight();
+            float originX = width / 2;
+            float originY = height / 2;
+            float rotation = MathUtils.radiansToDegrees * ANT_DIRECTION;
+            batch.draw(this.texture, this.x - originX, this.y - originY, originX, originY, width, height, 1, 1, rotation + 90, 0, 0, (int) width, (int) height, false, false);
+        }
 
-        // Abilita blending per la trasparenza
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        if (shapeRenderer != null) {
+            // Disegna il cerchietto con il colore appropriato
+            shapeRenderer.setColor(this.hasFood ? this.COLOR_WITH_FOOD : this.COLOR_WITHOUT_FOOD);
+            if (this.hasFood) {
+                // float offsetX = (float) Math.cos(this.ANT_DIRECTION) * 15;
+                // float offsetY = (float) Math.sin(this.ANT_DIRECTION) * 15;
+                shapeRenderer.circle(this.x, this.y, 5); // Cerchio più grande per il cibo
+            }
 
-        // Disegna il cerchietto con il colore appropriato
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(this.hasFood ? this.COLOR_WITH_FOOD : this.COLOR_WITHOUT_FOOD);
-        shapeRenderer.circle(this.x, this.y, 5);
-        shapeRenderer.end();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
-        shapeRenderer.circle(this.x, this.y, height / 2);
-        shapeRenderer.end();
-
-        // Disabilita blending
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+            // Disegna il cerchio esterno per indicare il raggio di collisione
+            // shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
+            // shapeRenderer.circle(this.x, this.y, texture.getHeight() / 2f);
+        }
     }
 
     public void dispose() {

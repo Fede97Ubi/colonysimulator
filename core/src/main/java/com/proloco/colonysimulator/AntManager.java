@@ -3,6 +3,8 @@ package com.proloco.colonysimulator;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 
 public class AntManager {
     private MarkerGrid markerGrid; // Dichiarazione spostata qui
@@ -28,9 +30,24 @@ public class AntManager {
     }
     
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
+        batch.begin(); // Inizia il batch rendering per tutte le formiche
         for (Ant ant : ants) {
-            ant.render(batch, shapeRenderer); // Passa entrambi i parametri
+            ant.render(batch, null); // Renderizza solo le texture con SpriteBatch
         }
+        batch.end(); // Termina il batch rendering
+
+        // Abilita blending per la trasparenza
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (Ant ant : ants) {
+            ant.render(null, shapeRenderer); // Renderizza i cerchi con ShapeRenderer
+        }
+        shapeRenderer.end();
+
+        // Disabilita blending dopo il rendering
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     public void update() {
