@@ -4,17 +4,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.Gdx;
+import java.text.DecimalFormat;
 
 public class InfoGraph {
     private static final int ONE_SECOND = 1000;
     private static final int TEN_SECONDS = 10;
     private static final int THIRTY_SECONDS = 30;
     private static final int THREE_MINUTES = 180;
+    private static final int INFO_PANEL_WIDTH = 400; // Width of the info panel
 
     private Array<Long>[] timeBuckets; // Buckets for 10s, 30s, 3m
     private long lastUpdateTime;
     private String[] descriptions;
     private BitmapFont font;
+    private DecimalFormat decimalFormat;
 
     public InfoGraph() {
         timeBuckets = new Array[3];
@@ -37,6 +41,7 @@ public class InfoGraph {
         };
 
         font = new BitmapFont(); // Initialize font for rendering text
+        decimalFormat = new DecimalFormat("#.000"); // Format for three decimal places
     }
 
     public void update(long[] executionTimes) {
@@ -58,19 +63,24 @@ public class InfoGraph {
 
     public void render(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         batch.begin();
-        int yOffset = 20;
+        int screenHeight = Gdx.graphics.getHeight();
+        int sectionHeight = screenHeight / descriptions.length; // Divide height equally
+
         for (int i = 0; i < descriptions.length; i++) {
             float avg10s = calculateAverage(timeBuckets[0], i);
             float avg30s = calculateAverage(timeBuckets[1], i);
             float avg3m = calculateAverage(timeBuckets[2], i);
 
-            font.draw(
-                batch,
-                descriptions[i] + " - Avg (10s): " + avg10s + " ms, Avg (30s): " + avg30s + " ms, Avg (3m): " + avg3m + " ms",
-                10,
-                yOffset
-            );
-            yOffset += 20;
+            String description = descriptions[i];
+            String values = "10s: " + decimalFormat.format(avg10s) + " ms, " +
+                            "30s: " + decimalFormat.format(avg30s) + " ms, " +
+                            "3m: " + decimalFormat.format(avg3m) + " ms";
+
+            int yPosition = screenHeight - (i * sectionHeight) - 20; // Position for description
+            font.draw(batch, description, Gdx.graphics.getWidth() - INFO_PANEL_WIDTH + 10, yPosition);
+
+            yPosition -= 20; // Position for values below the description
+            font.draw(batch, values, Gdx.graphics.getWidth() - INFO_PANEL_WIDTH + 10, yPosition);
         }
         batch.end();
     }
