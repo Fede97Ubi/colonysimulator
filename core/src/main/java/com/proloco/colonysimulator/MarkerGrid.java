@@ -226,13 +226,24 @@ public class MarkerGrid {
             for (int j = centerJ - ANT_RANGE; j <= centerJ + ANT_RANGE; j++) {
                 if (i < 0 || j < 0 || i >= matrixToSearch.length || j >= matrixToSearch[0].length)
                     continue;
-                if (matrixToSearch[i][j] > maxVal) {
-                    maxVal = matrixToSearch[i][j];
+    
+                float value = matrixToSearch[i][j];
+                if (value > maxVal) {
+                    maxVal = value;
                     bestI = i;
                     bestJ = j;
+                } else if (value == maxVal) {
+                    // Se il valore è uguale al massimo, valuta la distanza fittizia
+                    int currentDistance = Math.abs(i - centerI) + Math.abs(j - centerJ);
+                    int bestDistance = Math.abs(bestI - centerI) + Math.abs(bestJ - centerJ);
+                    if (currentDistance < bestDistance) {
+                        bestI = i;
+                        bestJ = j;
+                    }
                 }
             }
         }
+    
         // Se abbiamo trovato una cella con valore maggiore di 0, calcola la direzione
         if (maxVal > 0) {
             // Calcola il centro della cella corrente

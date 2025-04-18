@@ -42,7 +42,7 @@ public class ZoneMatrix {
     public void decrementCellContent(int row, int col) {
         if (row >= 0 && row < rows && col >= 0 && col < cols && matrix[row][col] > 0) {
             matrix[row][col]--;
-            if (matrix[row][col] < 0) {
+            if (matrix[row][col] <= 0) {
                 matrix[row][col] = 0; // Assicurati che il contenuto non scenda sotto zero
                 markerGrid.setZone(zoneName, getArrayCells()); // Disabilita il marker se il contenuto è zero
             }

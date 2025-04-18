@@ -11,6 +11,7 @@ public class AntManager {
 
     private Array<Ant> ants;
     private static final int ANTS_QUANTITY = ConfigManager.getAntsQuantity();
+    private long lastPrintTime = 0;
 
     public AntManager(Zone baseZone, MarkerGrid markerGrid) {
         this.markerGrid = markerGrid;
@@ -58,11 +59,44 @@ public class AntManager {
 
     public void updateMatrix() {
         markerGrid.updateFromAnts(ants);
+
+        // Stampa la sotto-matrice ogni 2 secondi
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastPrintTime >= 2000) {
+            printFoodDistanceMatrixForAnt1();
+            lastPrintTime = currentTime;
+        }
     }
 
     public void updateAntsDirections() {
         for (Ant ant : ants) {
             ant.updateDirection(markerGrid);
+        }
+    }
+
+    private void printFoodDistanceMatrixForAnt1() {
+        Ant ant1 = ants.first(); // Supponiamo che la formica con ID 1 sia la prima
+        for (Ant ant : ants) {
+            if (ant.getId() == 1) {
+                ant1 = ant;
+                break;
+            }
+        }
+
+        int centerI = (int) (ant1.getY() / markerGrid.GRID_SPACING);
+        int centerJ = (int) (ant1.getX() / markerGrid.GRID_SPACING);
+        int range = ConfigManager.getAntRange();
+        float[][] matrix = markerGrid.getFoodDistanceMatrix();
+
+        System.out.println("Sotto-matrice foodDistanceMatrix per la formica con ID 1:");
+        for (int i = centerI + range; i >= centerI - range; i--) { // Inverti l'ordine delle righe
+            if (i < 0 || i >= matrix.length) continue; // Salta righe fuori dai limiti
+            for (int j = centerJ - range; j <= centerJ + range; j++) {
+                if (j < 0 || j >= matrix[0].length) continue; // Salta colonne fuori dai limiti
+                int value = (int) matrix[i][j]; // Rimuovi i valori decimali
+                System.out.print(value == 0 ? "_ " : value + " "); // Sostituisci 0 con _
+            }
+            System.out.println();
         }
     }
 

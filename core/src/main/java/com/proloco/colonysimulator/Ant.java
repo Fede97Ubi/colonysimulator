@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Ant {
+    private static int idCounter = 0; // Contatore statico per assegnare ID univoci
+    private int id; // ID della formica
     private Texture texture;
     private float x, y;
     private float ANT_SPEED = ConfigManager.getAntSpeed();
@@ -24,6 +26,7 @@ public class Ant {
     public static final Color COLOR_WITH_FOOD = new Color(1, 1, 0, 0.8f);    // Giallo semitrasparente
 
     public Ant(float x, float y) {
+        this.id = ++idCounter; // Assegna un ID univoco
         this.x = x;
         this.y = y;
         this.ANT_DIRECTION = (float) (Math.random() * 2 * Math.PI); // Direzione casuale
@@ -151,6 +154,12 @@ public class Ant {
             // shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
             // shapeRenderer.circle(this.x, this.y, texture.getHeight() / 2f);
         }
+
+        // if (shapeRenderer != null && this.id == 1) {
+        //     // Disegna un pallino rosso nell'angolo della formica con ID 1
+        //     shapeRenderer.setColor(Color.RED);
+        //     shapeRenderer.circle(this.x - 10, this.y + 10, 3);
+        // }
     }
 
     public void dispose() {
@@ -175,5 +184,9 @@ public class Ant {
             x += correction.x;
             y += correction.y;
         }
+    }
+
+    public int getId() {
+        return id;
     }
 }

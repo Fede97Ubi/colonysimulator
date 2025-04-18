@@ -54,8 +54,9 @@ public class SceneManager {
 
             baseZone = new Zone(150, height - 150, 80, new Color(0.5f, 0.5f, 0.5f, 0.5f), "base");
             markerGrid = new MarkerGrid( width - width_info_pannel, height, baseZone);
-            foodZone = new ZoneMatrix(markerGrid, width - width_info_pannel, height, new Color(1f, 1f, 0f, 0.5f), "food");
+            foodZone = new ZoneMatrix(markerGrid, width - width_info_pannel, height, new Color(1f, 1f, 0f, 0.1f), "food");
             foodZone.addZone(width - 150 - width_info_pannel, 150, 70, 20); // Aggiungi una zona cibo
+            foodZone.addZone(width - 150 - width_info_pannel, height - 150, 70, 20); // Aggiungi una zona cibo
 
             // aggiungere blocco per dividere da info_pannel
             addObject(new Block(width - width_info_pannel -12, -5, width_info_pannel + 12, height+10, "line"));
