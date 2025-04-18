@@ -12,7 +12,7 @@ public class SceneManager {
     private Array<SceneObject> objects;
     private Background background;
     private Zone baseZone;
-    private Zone foodZone;
+    private ZoneMatrix foodZone;
     private MarkerGrid markerGrid; // Dichiarazione spostata qui
     private CollisionManager collisionManager;
     private InteractionManager interactionManager;
@@ -42,7 +42,7 @@ public class SceneManager {
         return baseZone;
     }
     
-    public Zone getFoodZone() {
+    public ZoneMatrix getFoodZone() {
         return foodZone;
     }
 
@@ -53,8 +53,9 @@ public class SceneManager {
             background = new Background(false, width - width_info_pannel, height); // Usa il pattern
 
             baseZone = new Zone(150, height - 150, 80, new Color(0.5f, 0.5f, 0.5f, 0.5f), "base");
-            foodZone = new Zone(width - 150 - width_info_pannel, 150, 70, new Color(1f, 1f, 0f, 0.5f), "food");
-            markerGrid = new MarkerGrid( width - width_info_pannel, height, baseZone, foodZone);
+            markerGrid = new MarkerGrid( width - width_info_pannel, height, baseZone);
+            foodZone = new ZoneMatrix(markerGrid, width - width_info_pannel, height, new Color(1f, 1f, 0f, 0.5f), "food");
+            foodZone.addZone(width - 150 - width_info_pannel, 150, 70, 20); // Aggiungi una zona cibo
 
             // aggiungere blocco per dividere da info_pannel
             addObject(new Block(width - width_info_pannel -12, -5, width_info_pannel + 12, height+10, "line"));

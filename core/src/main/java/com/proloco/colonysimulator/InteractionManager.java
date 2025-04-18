@@ -13,16 +13,22 @@ public class InteractionManager {
      * Se una formica passa sopra una zona base ed ha hasFood=true, allora imposta hasFood=false.
      */
     public void processInteractions(AntManager antManager) {
-        Zone foodZone = sceneManager.getFoodZone();
+        ZoneMatrix foodZone = sceneManager.getFoodZone();
         Zone baseZone = sceneManager.getBaseZone();
         
         for (Ant ant : antManager.getAnts()) {
             float antX = ant.getX();
             float antY = ant.getY();
             
-            // Se la formica è sopra la zona cibo e non ha cibo, impostala su true.
-            if (foodZone != null && foodZone.contains(antX, antY) && !ant.hasFood()) {
+            // Converti le coordinate del mondo in coordinate della matrice
+            int[] cellIndices = foodZone.getCellIndices(antX, antY);
+            int row = cellIndices[0];
+            int col = cellIndices[1];
+
+            // Controlla se la formica è in una cella di cibo
+            if (foodZone.getCellContent(row, col) > 0 && !ant.hasFood()) {
                 ant.setHasFood(true);
+                foodZone.decrementCellContent(row, col);
             }
             // Se la formica è sopra la zona base e possiede cibo, impostala su false.
             if (baseZone != null && baseZone.contains(antX, antY) && ant.hasFood()) {

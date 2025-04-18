@@ -53,19 +53,25 @@ public class CollisionManager {
                 }
             }
             
-            // -------- Interazione con le zone --------
-            // Si assume che SceneManager gestisca le zone, per esempio in variabili separate:
-            // baseZone e foodZone
-            Zone baseZone = sceneManager.getBaseZone();
-            Zone foodZone = sceneManager.getFoodZone();
-            // Se il centro della formica entra nella zona cibo e non ha ancora cibo:
-            if (foodZone != null && foodZone.contains(antX, antY) && !ant.hasFood()) {
-                ant.setHasFood(true);
-            }
-            // Se il centro della formica entra nella zona base e possiede cibo:
-            if (baseZone != null && baseZone.contains(antX, antY) && ant.hasFood()) {
-                ant.setHasFood(false);
-            }
+            // // -------- Interazione con le zone --------
+            // // Si assume che SceneManager gestisca le zone, per esempio in variabili separate:
+            // // baseZone e foodZone
+            // Zone baseZone = sceneManager.getBaseZone();
+            // ZoneMatrix foodZone = sceneManager.getFoodZone();
+            // // Converti le coordinate del mondo in coordinate della matrice
+            // int[] cellIndices = foodZone.getCellIndices(antX, antY);
+            // int row = cellIndices[0];
+            // int col = cellIndices[1];
+
+            // // Controlla se la formica è in una cella di cibo
+            // if (foodZone.getCellContent(row, col) > 0 && !ant.hasFood()) {
+            //     ant.setHasFood(true);
+            //     foodZone.decrementCellContent(row, col);
+            // }
+            // // Se il centro della formica entra nella zona base e possiede cibo:
+            // if (baseZone != null && baseZone.contains(antX, antY) && ant.hasFood()) {
+            //     ant.setHasFood(false);
+            // }
         }
     }
     

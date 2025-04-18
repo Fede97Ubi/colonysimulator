@@ -7,16 +7,16 @@ import com.badlogic.gdx.utils.Array;
 
 public class MarkerGrid {
     public static final int GRID_SPACING = ConfigManager.getGridSpacing();
-    public static final float TIME_DISTANCE_FRACTION = ConfigManager.getDefaultTimeDistance()*1.4f;
+    public static final float TIME_DISTANCE_FRACTION = ConfigManager.getDefaultTimeDistance()*1.1f;
     private float[][] trampleMatrix;
     private float[][] baseDistanceMatrix;
     private float[][] foodDistanceMatrix;
-    private String activeMatrixType = "trampleMatrix"; // Variabile per la matrice attiva
+    private String activeMatrixType = "foodDistanceMatrix"; // Variabile per la matrice attiva
     private int ANT_RANGE = ConfigManager.getAntRange(); // Raggio di ricerca per la matrice
     private Array<int[]> baseZoneCells; // Celle completamente incluse nella zona base
-    private Array<int[]> foodZoneCells; // Celle completamente incluse nella zona cibo
+    private Array<int[]> foodZoneCells = null; // Celle completamente incluse nella zona cibo
 
-    public MarkerGrid(int width, int height, Zone baseZone, Zone foodZone) {
+    public MarkerGrid(int width, int height, Zone baseZone) {
         int cols = width / GRID_SPACING;
         int rows = height / GRID_SPACING;
 
@@ -36,7 +36,14 @@ public class MarkerGrid {
 
         // Calcola le celle completamente incluse nelle zone
         baseZoneCells = calculateIncludedCells(baseZone);
-        foodZoneCells = calculateIncludedCells(foodZone);
+    }
+
+    public void setZone(String zone, Array<int[]> foodZoneCells) {
+        if (zone.equals("food")) {
+            this.foodZoneCells = foodZoneCells;
+        } else {
+            throw new IllegalArgumentException("Tipo di zona non valido: " + zone);
+        }
     }
 
     private Array<int[]> calculateIncludedCells(Zone zone) {
@@ -115,10 +122,12 @@ public class MarkerGrid {
             int j = cell[1];
             baseDistanceMatrix[i][j] = defaultTimeDistance;
         }
-        for (int[] cell : foodZoneCells) {
-            int i = cell[0];
-            int j = cell[1];
-            foodDistanceMatrix[i][j] = defaultTimeDistance;
+        if (foodZoneCells != null) {
+            for (int[] cell : foodZoneCells) {
+                int i = cell[0];
+                int j = cell[1];
+                foodDistanceMatrix[i][j] = defaultTimeDistance;
+            }
         }
     }
 
