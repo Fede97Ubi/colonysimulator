@@ -46,6 +46,13 @@ public class MarkerGrid {
         }
     }
 
+    public void resetCell(int row, int col) {
+        // Resetta la cella nella matrice foodDistanceMatrix
+        if (row >= 0 && row < foodDistanceMatrix.length && col >= 0 && col < foodDistanceMatrix[0].length) {
+            foodDistanceMatrix[row][col] = 0;
+        }
+    }
+
     private Array<int[]> calculateIncludedCells(Zone zone) {
         Array<int[]> includedCells = new Array<>();
         int rows = trampleMatrix.length;

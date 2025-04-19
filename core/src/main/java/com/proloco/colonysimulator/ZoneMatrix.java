@@ -45,6 +45,7 @@ public class ZoneMatrix {
             if (matrix[row][col] <= 0) {
                 matrix[row][col] = 0; // Assicurati che il contenuto non scenda sotto zero
                 markerGrid.setZone(zoneName, getArrayCells()); // Disabilita il marker se il contenuto è zero
+                markerGrid.resetCell(row, col); // Resetta la cella nella matrice dei marker
             }
         }
     }

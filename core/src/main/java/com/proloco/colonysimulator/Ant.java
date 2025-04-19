@@ -89,7 +89,7 @@ public class Ant {
         y += Math.sin(this.ANT_DIRECTION) * this.ANT_SPEED;
 
         // Decrementa timeDistance ad ogni update (si può limitare a 0 se necessario)
-        timeDistance -= 0.02f;
+        timeDistance -= 0.011f;
         if (timeDistance < 0) {
             timeDistance = 0;
         }
