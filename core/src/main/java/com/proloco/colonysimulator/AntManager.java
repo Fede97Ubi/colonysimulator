@@ -60,12 +60,12 @@ public class AntManager {
     public void updateMatrix() {
         markerGrid.updateFromAnts(ants);
 
-        // Stampa la sotto-matrice ogni 2 secondi
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastPrintTime >= 2000) {
-            printFoodDistanceMatrixForAnt1();
-            lastPrintTime = currentTime;
-        }
+        // // Stampa la sotto-matrice ogni 2 secondi
+        // long currentTime = System.currentTimeMillis();
+        // if (currentTime - lastPrintTime >= 2000) {
+        //     printFoodDistanceMatrixForAnt1();
+        //     lastPrintTime = currentTime;
+        // }
     }
 
     public void updateAntsDirections() {

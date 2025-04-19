@@ -41,7 +41,7 @@ public class Ant {
     public void setHasFood(boolean value) {
         // Se cambia lo stato, reimposta timeDistance a DEFAULT_TIME_DISTANCE
         this.hasFood = value;
-        resetTimeDistance();
+        resetTimeDistance(value);
     }
     
     // Getter per timeDistance
@@ -50,8 +50,16 @@ public class Ant {
     }
     
     // Metodo per resettare il timeDistance
-    private void resetTimeDistance() {
-        this.timeDistance = this.DEFAULT_TIME_DISTANCE;
+    private void resetTimeDistance(boolean value) {
+        if ( value == true) {
+            if (this.timeDistance > 0) {
+                this.timeDistance = this.DEFAULT_TIME_DISTANCE - this.timeDistance + 1;
+            } else {
+                this.timeDistance = this.DEFAULT_TIME_DISTANCE;
+            }
+        } else {
+            this.timeDistance = this.DEFAULT_TIME_DISTANCE;
+        }
     }
     
     public float getDirection() {
